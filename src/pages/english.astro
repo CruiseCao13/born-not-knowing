@@ -1,0 +1,44 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Main from "@/components/Main.astro";
+import Footer from "@/components/Footer.astro";
+import Card from "@/components/Card.astro";
+import { getSortedPosts } from "@/utils/getSortedPosts";
+import config from "@/config";
+
+const posts = getSortedPosts(
+  await getCollection(
+    "posts",
+    ({ data }) => data.category === "English" && !data.draft
+  )
+);
+const sections = [
+  "Phrases I want to remember",
+  "Sentences I translated",
+  "Words I misused",
+  "Short essays",
+  "Speaking notes",
+];
+---
+
+<Layout
+  title={`English Ledger | ${config.site.title}`}
+  description="Notes on words, sentences, mistakes, and clearer expression."
+>
+  <Header />
+  <Main
+    pageTitle="English Ledger"
+    pageDesc="Notes on words, sentences, mistakes, and clearer expression."
+  >
+    <ul class="grid gap-2 sm:grid-cols-2">
+      {sections.map(item => <li class="border-border border p-3">{item}</li>)}
+    </ul>
+    <section class="mt-10">
+      <h2 class="text-xl font-semibold">English Notes</h2>
+      <ul>{posts.map(post => <Card {...post} />)}</ul>
+    </section>
+  </Main>
+  <Footer />
+</Layout>

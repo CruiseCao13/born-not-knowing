@@ -1,7 +1,9 @@
 ---
 import type { HTMLAttributes } from "astro/types";
+import { getRelativeLocaleUrl } from "astro:i18n";
 import Socials from "./Socials.astro";
 import { useTranslations } from "@/i18n";
+import config from "@/config";
 
 type Props = {
   noMarginTop?: boolean;
@@ -11,20 +13,51 @@ const { noMarginTop = false, class: className, ...attrs } = Astro.props;
 
 const t = useTranslations(Astro.currentLocale);
 const currentYear = new Date().getFullYear();
+const locale = Astro.currentLocale ?? config.site.lang;
+const footerLinks = [
+  ["Home", ""],
+  ["Now", "now"],
+  ["Notes", "notes"],
+  ["Markets", "markets"],
+  ["Projects", "projects"],
+  ["About", "about"],
+  ["RSS", "rss.xml"],
+];
 ---
 
 <footer
   class:list={["app-layout", { "mt-auto": !noMarginTop }, className]}
   {...attrs}
 >
-  <div
-    class="border-border flex flex-col items-center justify-between border-t py-6 sm:flex-row-reverse sm:py-4"
-  >
-    <Socials />
-    <div class="my-2 flex flex-col items-center whitespace-nowrap sm:flex-row">
-      <span>{t.footer.copyright} &#169; {currentYear}</span>
-      <span class="hidden sm:inline">&nbsp;|&nbsp;</span>
-      <span>{t.footer.allRightsReserved}</span>
+  <div class="border-border border-t py-8">
+    <div
+      class="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between"
+    >
+      <div>
+        <p class="font-semibold">{t.footer.copyright}</p>
+        <p class="text-muted-foreground mt-1 text-sm">
+          Cruise Cao &#169; {currentYear}
+        </p>
+      </div>
+      <div class="flex flex-col gap-4 sm:items-end">
+        <nav aria-label="Footer navigation">
+          <ul class="flex flex-wrap gap-x-4 gap-y-2 text-sm">
+            {
+              footerLinks.map(([label, href]) => (
+                <li>
+                  <a
+                    class="hover:text-accent"
+                    href={getRelativeLocaleUrl(locale, href)}
+                  >
+                    {label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+        <Socials />
+      </div>
     </div>
   </div>
 </footer>

@@ -1,0 +1,62 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Main from "@/components/Main.astro";
+import Footer from "@/components/Footer.astro";
+import config from "@/config";
+
+const principles = [
+  [
+    "Begin with not knowing.",
+    "Knowing that I do not know is not weakness. It is the beginning of real study.",
+  ],
+  [
+    "Write before I feel ready.",
+    "If I wait until I fully understand something, I will never write. Writing is how I find the gaps.",
+  ],
+  [
+    "Separate signal from ego.",
+    "A note is useful if it makes my thinking clearer, not if it makes me look smart.",
+  ],
+  [
+    "Keep a record of wrongness.",
+    "Old mistakes are not embarrassing if I review them. They are embarrassing only if I repeat them blindly.",
+  ],
+  [
+    "Evidence first, opinion second.",
+    "In markets, engineering, and life, opinions are cheap. Evidence is the discipline.",
+  ],
+  [
+    "Build small things.",
+    "Small projects expose fake understanding faster than passive reading.",
+  ],
+  [
+    "Review.",
+    "A thought that is never reviewed is not a system. It is just a mood.",
+  ],
+];
+---
+
+<Layout
+  title={`Learning Principles | ${config.site.title}`}
+  description="Rules I want to live with while learning."
+>
+  <Header />
+  <Main
+    pageTitle="Learning Principles"
+    pageDesc="Rules I want to live with while learning."
+  >
+    <div class="grid gap-8">
+      {
+        principles.map(([title, body], index) => (
+          <section class="border-border border-l-2 pl-4">
+            <p class="text-muted-foreground text-sm">{index + 1}</p>
+            <h2 class="mt-1 text-xl font-semibold">{title}</h2>
+            <p class="mt-2">{body}</p>
+          </section>
+        ))
+      }
+    </div>
+  </Main>
+  <Footer />
+</Layout>

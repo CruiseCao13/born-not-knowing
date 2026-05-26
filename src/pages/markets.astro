@@ -1,0 +1,53 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Main from "@/components/Main.astro";
+import Footer from "@/components/Footer.astro";
+import Card from "@/components/Card.astro";
+import { getSortedPosts } from "@/utils/getSortedPosts";
+import config from "@/config";
+
+const posts = getSortedPosts(
+  await getCollection(
+    "posts",
+    ({ data }) => data.category === "Markets" && !data.draft
+  )
+);
+const sections = [
+  "Company notes",
+  "Industry notes",
+  "Mistake reviews",
+  "Investing principles",
+  "Reading notes",
+];
+---
+
+<Layout
+  title={`Markets Journal | ${config.site.title}`}
+  description="Personal study notes on companies, markets, risk, and investing judgment."
+>
+  <Header />
+  <Main
+    pageTitle="Markets Journal"
+    pageDesc="Personal study notes on companies, markets, risk, and investing judgment."
+  >
+    <div class="border-border bg-muted/35 border p-4">
+      <p>
+        This is a personal learning journal, not financial advice. Nothing here
+        is a recommendation to buy, sell, or hold any investment product.
+      </p>
+    </div>
+    <section class="mt-8">
+      <h2 class="text-xl font-semibold">Sections</h2>
+      <ul class="mt-3 grid gap-2 sm:grid-cols-2">
+        {sections.map(item => <li class="border-border border p-3">{item}</li>)}
+      </ul>
+    </section>
+    <section class="mt-8">
+      <h2 class="text-xl font-semibold">Markets Notes</h2>
+      <ul>{posts.map(post => <Card {...post} />)}</ul>
+    </section>
+  </Main>
+  <Footer />
+</Layout>

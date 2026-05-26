@@ -1,0 +1,74 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Main from "@/components/Main.astro";
+import Footer from "@/components/Footer.astro";
+import config from "@/config";
+
+const sections = [
+  {
+    title: "Learning",
+    items: [
+      "Engineering fundamentals",
+      "English writing and expression",
+      "Company analysis and investment judgment",
+      "Music listening and taste",
+      "Better note-taking systems",
+    ],
+  },
+  {
+    title: "Building",
+    items: [
+      "This website",
+      "Small learning logs",
+      "A cleaner investing journal template",
+      "Simple project notes for experiments",
+    ],
+  },
+  {
+    title: "Reading / Watching / Listening",
+    items: ["Book:", "Company:", "Album:", "Technical topic:"],
+  },
+  {
+    title: "Questions I am carrying",
+    items: [
+      "What do I actually understand, and what am I only repeating?",
+      "What evidence would change my mind?",
+      "What skill compounds if I practice it for two years?",
+      "Which notes are worth revisiting?",
+    ],
+  },
+];
+---
+
+<Layout
+  title={`Now | ${config.site.title}`}
+  description="What I am learning, building, and paying attention to right now."
+>
+  <Header />
+  <Main
+    pageTitle="Now"
+    pageDesc="What I am learning, building, and paying attention to right now."
+  >
+    <p class="text-muted-foreground">Updated: 2026-05-26</p>
+    <div class="mt-8 grid gap-8">
+      {
+        sections.map(section => (
+          <section>
+            <h2 class="text-xl font-semibold">{section.title}</h2>
+            <ul class="mt-3 grid gap-2">
+              {section.items.map(item => (
+                <li class="border-border border-l-2 pl-4">{item}</li>
+              ))}
+            </ul>
+          </section>
+        ))
+      }
+    </div>
+    <section class="mt-8">
+      <h2 class="text-xl font-semibold">Next review date</h2>
+      <p class="mt-3">2026-06-26</p>
+    </section>
+  </Main>
+  <Footer />
+</Layout>

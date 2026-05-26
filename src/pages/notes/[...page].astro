@@ -1,6 +1,7 @@
 ---
 import type { GetStaticPaths } from "astro";
 import { getCollection } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
@@ -21,14 +22,41 @@ const { page } = Astro.props;
 
 const locale = Astro.currentLocale ?? config.site.lang;
 const t = useTranslations(locale);
+const categories = [
+  ["Engineering", "engineering"],
+  ["English", "english"],
+  ["Markets", "markets"],
+  ["Music", "music"],
+  ["Projects", "projects"],
+  ["Reflections", "reflections"],
+];
 ---
 
-<Layout title={`${t.pages.postsTitle} | ${config.site.title}`}>
+<Layout
+  title={`${t.pages.postsTitle} | ${config.site.title}`}
+  description={t.pages.postsDesc}
+>
   <Header />
 
   <Breadcrumb />
 
   <Main pageTitle={t.pages.postsTitle} pageDesc={t.pages.postsDesc}>
+    <nav aria-label="Note categories" class="mb-8">
+      <ul class="flex flex-wrap gap-3">
+        {
+          categories.map(([label, href]) => (
+            <li>
+              <a
+                class="border-border hover:border-accent inline-block border px-3 py-2 text-sm"
+                href={getRelativeLocaleUrl(locale, href)}
+              >
+                {label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
     <ul>
       {page.data.map(data => <Card {...data} />)}
     </ul>

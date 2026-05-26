@@ -1,137 +1,182 @@
 ---
 import { getCollection } from "astro:content";
 import { getRelativeLocaleUrl } from "astro:i18n";
-import IconRss from "@/assets/icons/IconRss.svg";
 import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
-import Socials from "@/components/Socials.astro";
 import Card from "@/components/Card.astro";
 import LinkButton from "@/components/LinkButton.astro";
+import { getPostUrl } from "@/utils/getPostPaths";
 import { getSortedPosts } from "@/utils/getSortedPosts";
-import { useTranslations } from "@/i18n";
 import config from "@/config";
 
-const { socials, posts: postsConfig } = config;
-
 const locale = Astro.currentLocale ?? config.site.lang;
-const t = useTranslations(locale);
+const posts = getSortedPosts(
+  await getCollection("posts", ({ data }) => !data.draft)
+);
+const startHereTitles = [
+  "Why I Built This Site",
+  "My Learning Principles",
+  "How I Study Markets Without Pretending to Be an Expert",
+];
+const startHerePosts = startHereTitles
+  .map(title => posts.find(post => post.data.title === title))
+  .filter(post => post !== undefined);
 
-const posts = await getCollection("posts");
-const sortedPosts = getSortedPosts(posts);
-const featuredPosts = sortedPosts.filter(({ data }) => data.featured);
-const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
-const homePath = getRelativeLocaleUrl(locale, "");
+const currentFocus = [
+  [
+    "Engineering fundamentals",
+    "Systems, automation, electronics, and how physical things work.",
+  ],
+  [
+    "English",
+    "Cleaner writing, better expression, and translating thought into language.",
+  ],
+  [
+    "Markets",
+    "Business models, risk, capital allocation, and investment judgment.",
+  ],
+  ["Music", "Listening notes, taste, rhythm, and emotional memory."],
+  ["Projects", "Small tools, experiments, and practical systems."],
+];
+
+const ledgerLinks = [
+  ["Engineering", "engineering"],
+  ["English", "english"],
+  ["Markets", "markets"],
+  ["Music", "music"],
+  ["Projects", "projects"],
+  ["Reflections", "reflections"],
+];
+
+const principles = [
+  "Record the process before the results.",
+  "Prefer clarity over performance.",
+  "Make mistakes visible enough to learn from them.",
+  "Separate evidence from opinion.",
+  "Review old thoughts instead of worshipping them.",
+  "Build slowly, but keep building.",
+];
 ---
 
-<Layout>
+<Layout
+  title="Born Not Knowing | Cruise Cao"
+  description="Born not knowing. Learning ever since."
+>
   <Header />
-  <main
-    id="main-content"
-    data-layout="index"
-    data-home-path={homePath}
-    class="app-layout"
-  >
-    <section id="hero" class="border-border border-b pt-8 pb-6">
-      <h1 class="my-4 inline-block text-4xl font-bold sm:my-8 sm:text-5xl">
-        Mingalaba
+  <main id="main-content" class="app-layout">
+    <section class="border-border border-b py-12 sm:py-16">
+      <p class="text-muted-foreground text-sm font-medium tracking-wide">
+        Cruise Cao
+      </p>
+      <h1 class="mt-4 max-w-2xl text-4xl leading-tight font-bold sm:text-5xl">
+        Born not knowing. Learning ever since.
       </h1>
-      <a
-        target="_blank"
-        href={getRelativeLocaleUrl(locale, "rss.xml")}
-        class="inline-block"
-        aria-label="RSS Feed"
-        title="RSS Feed"
-      >
-        <IconRss
-          width={20}
-          height={20}
-          class="stroke-accent scale-125 stroke-3 rtl:-rotate-90"
-        />
-        <span class="sr-only">RSS Feed</span>
-      </a>
-
-      <p>
-        AstroPaper is a minimal, responsive, accessible and SEO-friendly Astro
-        blog theme. This theme follows best practices and provides accessibility
-        out of the box. Light and dark mode are supported by default. Moreover,
-        additional color schemes can also be configured.
+      <p class="mt-5 text-xl font-medium">I write to think clearer.</p>
+      <p class="mt-5 max-w-2xl text-lg">
+        This is my public notebook on engineering, English, markets, music,
+        projects, and the slow work of becoming less wrong.
       </p>
-      <p class="mt-2">
-        Read the blog posts or check
+      <div class="mt-8 flex flex-wrap gap-3">
+        <LinkButton href={getRelativeLocaleUrl(locale, "notes")}>
+          Start reading
+          <IconArrowRight class="inline-block rtl:-rotate-180" />
+        </LinkButton>
         <LinkButton
-          class="hover:text-accent underline decoration-dashed underline-offset-4"
-          href="https://github.com/satnaing/astro-paper#readme"
+          href={getRelativeLocaleUrl(locale, "now")}
+          class="border-border hover:border-accent border px-4 py-2"
         >
-          README
-        </LinkButton> for more info.
+          What I’m learning now
+        </LinkButton>
+      </div>
+      <p class="text-muted-foreground mt-5 text-sm">
+        No guru. No shortcut. Just notes, experiments, mistakes, and revisions.
       </p>
-      {
-        socials.length > 0 && (
-          <div class="mt-4 flex max-sm:flex-col sm:items-center">
-            <div class="me-2 mb-1 whitespace-nowrap sm:mb-0">
-              {t.home.socialLinks}:
-            </div>
-            <Socials />
-          </div>
-        )
-      }
+      <div class="border-border bg-muted/35 mt-8 border p-4">
+        <p class="text-sm">
+          <span class="font-semibold">Currently studying:</span> engineering fundamentals,
+          English expression, company analysis, music, and practical systems.
+        </p>
+      </div>
     </section>
 
-    {
-      featuredPosts.length > 0 && (
-        <section
-          id="featured"
-          class:list={[
-            "pt-12 pb-6",
-            { "border-border border-b": recentPosts.length > 0 },
-          ]}
-        >
-          <h2 class="text-2xl font-semibold tracking-wide">
-            {t.home.featured}
-          </h2>
-          <ul>
-            {featuredPosts.map(data => (
-              <Card variant="h3" {...data} />
-            ))}
-          </ul>
-        </section>
-      )
-    }
+    <section class="border-border border-b py-10">
+      <h2 class="text-2xl font-semibold">Current Focus</h2>
+      <div class="mt-6 grid gap-4 sm:grid-cols-2">
+        {
+          currentFocus.map(([title, description]) => (
+            <article class="border-border bg-background border p-4">
+              <h3 class="font-semibold">{title}</h3>
+              <p class="text-muted-foreground mt-2 text-sm">{description}</p>
+            </article>
+          ))
+        }
+      </div>
+    </section>
 
-    {
-      recentPosts.length > 0 && (
-        <section id="recent-posts" class="pt-12 pb-6">
-          <h2 class="text-2xl font-semibold tracking-wide">
-            {t.home.recentPosts}
-          </h2>
-          <ul>
-            {recentPosts.slice(0, postsConfig.perIndex).map(data => (
-              <Card variant="h3" {...data} />
-            ))}
-          </ul>
-        </section>
-      )
-    }
+    <section class="border-border border-b py-10">
+      <h2 class="text-2xl font-semibold">Start Here</h2>
+      <div class="mt-6 grid gap-4">
+        {
+          startHerePosts.map(post => (
+            <a
+              class="border-border hover:border-accent block border p-4"
+              href={getPostUrl(post.id, post.filePath, locale)}
+            >
+              <h3 class="text-accent font-semibold">{post.data.title}</h3>
+              <p class="text-muted-foreground mt-2 text-sm">
+                {post.data.description}
+              </p>
+            </a>
+          ))
+        }
+      </div>
+    </section>
 
-    <div class="my-8 text-center">
-      <LinkButton href={getRelativeLocaleUrl(locale, "posts")}>
-        {t.home.allPosts}
-        <IconArrowRight class="inline-block rtl:-rotate-180" />
-      </LinkButton>
-    </div>
+    <section class="border-border border-b py-10">
+      <h2 class="text-2xl font-semibold">Recent Notes</h2>
+      <ul>
+        {posts.slice(0, 5).map(data => <Card variant="h3" {...data} />)}
+      </ul>
+      <div class="mt-6">
+        <LinkButton href={getRelativeLocaleUrl(locale, "notes")}>
+          All notes
+          <IconArrowRight class="inline-block rtl:-rotate-180" />
+        </LinkButton>
+      </div>
+    </section>
+
+    <section class="border-border border-b py-10">
+      <h2 class="text-2xl font-semibold">Learning Ledger</h2>
+      <p class="text-muted-foreground mt-3">
+        A running record of what I’m studying, testing, misunderstanding,
+        correcting, and slowly improving.
+      </p>
+      <div class="mt-5 flex flex-wrap gap-3">
+        {
+          ledgerLinks.map(([label, href]) => (
+            <a
+              class="border-border hover:border-accent border px-3 py-2 text-sm"
+              href={getRelativeLocaleUrl(locale, href)}
+            >
+              {label}
+            </a>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="py-10">
+      <h2 class="text-2xl font-semibold">Principles</h2>
+      <ul class="mt-5 grid gap-3">
+        {
+          principles.map(item => (
+            <li class="border-border border-l-2 pl-4">{item}</li>
+          ))
+        }
+      </ul>
+    </section>
   </main>
   <Footer />
 </Layout>
-
-<script>
-  document.addEventListener("astro:page-load", () => {
-    const indexLayout = (document.querySelector("#main-content") as HTMLElement)
-      ?.dataset;
-    const baseRoot = import.meta.env.BASE_URL.replace(/\/?$/, "/");
-    if (indexLayout?.layout) {
-      sessionStorage.setItem("backUrl", indexLayout.homePath ?? baseRoot);
-    }
-  });
-</script>

@@ -1,0 +1,31 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Main from "@/components/Main.astro";
+import Footer from "@/components/Footer.astro";
+import Card from "@/components/Card.astro";
+import { getSortedPosts } from "@/utils/getSortedPosts";
+import config from "@/config";
+
+const posts = getSortedPosts(
+  await getCollection(
+    "posts",
+    ({ data }) => data.category === "Engineering" && !data.draft
+  )
+);
+---
+
+<Layout
+  title={`Engineering Notes | ${config.site.title}`}
+  description="Notes on systems, automation, electronics, and how physical things work."
+>
+  <Header />
+  <Main
+    pageTitle="Engineering Notes"
+    pageDesc="Systems, automation, electronics, and how physical things work."
+  >
+    <ul>{posts.map(post => <Card {...post} />)}</ul>
+  </Main>
+  <Footer />
+</Layout>

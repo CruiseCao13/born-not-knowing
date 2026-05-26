@@ -1,0 +1,92 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Main from "@/components/Main.astro";
+import Footer from "@/components/Footer.astro";
+import Card from "@/components/Card.astro";
+import { getSortedPosts } from "@/utils/getSortedPosts";
+import config from "@/config";
+
+const posts = getSortedPosts(
+  await getCollection(
+    "posts",
+    ({ data }) => data.category === "Projects" && !data.draft
+  )
+);
+const projects = [
+  {
+    name: "Personal Website",
+    status: "Building",
+    learn: "How to create a durable public learning archive.",
+  },
+  {
+    name: "Investing Journal System",
+    status: "Idea",
+    learn: "How to separate evidence, thesis, risk, and review.",
+  },
+  {
+    name: "Engineering Notes Archive",
+    status: "Idea",
+    learn: "How systems, automation, and hardware concepts connect.",
+  },
+  {
+    name: "English Expression Log",
+    status: "Idea",
+    learn: "How to express thoughts more clearly in English.",
+  },
+];
+---
+
+<Layout
+  title={`Projects | ${config.site.title}`}
+  description="Small experiments, tools, and systems I build while learning."
+>
+  <Header />
+  <Main
+    pageTitle="Projects"
+    pageDesc="Small experiments, tools, and systems I build while learning."
+  >
+    <div class="grid gap-4">
+      {
+        projects.map(project => (
+          <article class="border-border border p-4">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <h2 class="text-xl font-semibold">{project.name}</h2>
+              <span class="bg-muted px-2 py-1 text-sm">{project.status}</span>
+            </div>
+            <dl class="mt-4 grid gap-3 text-sm">
+              <div>
+                <dt class="font-semibold">What I am trying to learn</dt>
+                <dd class="text-muted-foreground mt-1">{project.learn}</dd>
+              </div>
+              <div>
+                <dt class="font-semibold">What works</dt>
+                <dd class="text-muted-foreground mt-1">
+                  To be updated as the project develops.
+                </dd>
+              </div>
+              <div>
+                <dt class="font-semibold">What is broken</dt>
+                <dd class="text-muted-foreground mt-1">
+                  To be found through use.
+                </dd>
+              </div>
+              <div>
+                <dt class="font-semibold">Next step</dt>
+                <dd class="text-muted-foreground mt-1">
+                  Write the next project note.
+                </dd>
+              </div>
+            </dl>
+          </article>
+        ))
+      }
+    </div>
+    <section class="mt-10">
+      <h2 class="text-xl font-semibold">Project Notes</h2>
+      <ul>{posts.map(post => <Card {...post} />)}</ul>
+    </section>
+  </Main>
+  <Footer />
+</Layout>

@@ -3,7 +3,7 @@ import type { UIStrings } from "../types";
 export default {
   nav: {
     home: "Home",
-    posts: "Posts",
+    posts: "Notes",
     tags: "Tags",
     about: "About",
     archives: "Archives",
@@ -30,12 +30,12 @@ export default {
   home: {
     socialLinks: "Social Links",
     featured: "Featured",
-    recentPosts: "Recent Posts",
-    allPosts: "All Posts",
+    recentPosts: "Recent Notes",
+    allPosts: "All Notes",
   },
   footer: {
-    copyright: "Copyright",
-    allRightsReserved: "All rights reserved.",
+    copyright: "Born not knowing. Learning ever since.",
+    allRightsReserved: "",
   },
   pages: {
     tagTitle: "Tag",
@@ -44,8 +44,9 @@ export default {
     tagsTitle: "Tags",
     tagsDesc: "All the tags used in posts.",
 
-    postsTitle: "Posts",
-    postsDesc: "All the articles I've posted.",
+    postsTitle: "Notes",
+    postsDesc:
+      "All learning notes across engineering, English, markets, music, projects, and reflections.",
 
     archivesTitle: "Archives",
     archivesDesc: "All the articles I've archived.",
